@@ -1,0 +1,263 @@
+.section {
+  width: 100%;
+  margin-top: 96px;
+  padding: 80px 0;
+  background: transparent;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.section.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.container {
+  max-width: 1200px;
+  width: 100%;
+  padding: 0 20px;
+  margin: 0 auto;
+}
+
+/* 타이틀 (타일 섹션과 동일) */
+.title {
+  font-size: clamp(18px, 3vw, 26px);
+  font-weight: 700;
+  line-height: 1.3;
+  color: rgba(0, 0, 0, 0.85);
+  margin: 0 0 12px 0;
+  padding-left: 12px;
+}
+
+/* 서브 카피 */
+.subtitle {
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: rgba(0, 0, 0, 0.6);
+  margin: 0 0 48px 0;
+  padding-left: 12px;
+}
+
+/* 캐러셀 래퍼 */
+.carouselWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+/* 화살표 버튼 (데스크톱) - 완전히 숨김 */
+.arrowBtn {
+  display: none;
+}
+
+
+
+/* 카드 트랙 */
+.carouselTrack {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+.carouselInner {
+  display: flex;
+  gap: 16px;
+  transition: transform 0.5s ease-out;
+}
+
+/* 리뷰 카드 */
+.reviewCard {
+  flex: 0 0 calc(33.333% - 11px);
+  min-width: 0;
+  background: transparent;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  padding: 28px 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* 별점 */
+.stars {
+  font-size: 16px;
+  line-height: 1;
+  opacity: 0.9;
+}
+
+/* 한 줄 요약 */
+.summary {
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.4;
+  color: rgba(0, 0, 0, 0.85);
+  margin: 0;
+}
+
+/* 본문 */
+.content {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.6;
+  color: rgba(0, 0, 0, 0.7);
+  margin: 0;
+  flex: 1;
+}
+
+/* 메타 정보 */
+.meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+  font-size: 13px;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 12px;
+  background: rgba(100, 150, 255, 0.15);
+  color: rgba(0, 0, 0, 0.75);
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.storeInfo {
+  font-weight: 500;
+}
+
+.date {
+  color: rgba(0, 0, 0, 0.5);
+  font-size: 12px;
+}
+
+/* 점 인디케이터 - 완전히 숨김 */
+.dots {
+  display: none;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 0;
+}
+
+.dot:hover {
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.dotActive {
+  background: rgba(0, 0, 0, 0.7);
+  width: 24px;
+  border-radius: 4px;
+}
+
+/* 반응형: 태블릿 */
+@media (max-width: 1024px) {
+  .reviewCard {
+    flex: 0 0 calc(50% - 8px);
+  }
+
+  .carouselInner {
+    transform: translateX(0) !important;
+  }
+
+  .section .carouselInner {
+    gap: 12px;
+  }
+}
+
+/* 반응형: 모바일 */
+@media (max-width: 768px) {
+  .section {
+    margin-top: 60px;
+    padding: 60px 0;
+  }
+
+  .title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    padding-left: 30px;
+  }
+
+  .subtitle {
+    font-size: 14px;
+    margin-bottom: 36px;
+    padding-left: 30px;
+  }
+
+  .carouselWrapper {
+    gap: 0;
+  }
+
+  .carouselTrack {
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .carouselTrack::-webkit-scrollbar {
+    display: none;
+  }
+
+  .carouselInner {
+    gap: 12px;
+    padding: 0 20px;
+  }
+
+  .reviewCard {
+    flex: 0 0 calc(90vw - 40px);
+    scroll-snap-align: start;
+  }
+}
+
+@media (max-width: 480px) {
+  .section {
+    padding: 48px 0;
+  }
+
+  .reviewCard {
+    padding: 24px 20px;
+  }
+
+  .summary {
+    font-size: 16px;
+  }
+
+  .content {
+    font-size: 13px;
+  }
+}
+
+/* 접근성: 움직임 감소 */
+@media (prefers-reduced-motion: reduce) {
+  .section {
+    transition: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  .carouselInner {
+    transition: none;
+  }
+
+  .arrowBtn {
+    transition: none;
+  }
+}
