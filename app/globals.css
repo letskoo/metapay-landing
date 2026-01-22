@@ -1,4 +1,6 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
   --background: #ffffff;
@@ -9,7 +11,7 @@ html {
   scroll-behavior: smooth;
 }
 
-/* 전역 가로 스크롤 차단 */
+/* ?�역 가�??�크�?차단 */
 html,
 body,
 #__next,
@@ -18,7 +20,7 @@ main {
   overflow-x: hidden;
 }
 
-/* 히어로 섹션 애니메이션 */
+/* ?�어�??�션 ?�니메이??*/
 @keyframes slideDownFadeIn {
   0% {
     opacity: 0;
@@ -38,7 +40,7 @@ body {
   overflow-x: hidden;
 }
 
-/* 메인 하단 공간 확보 */
+/* 메인 ?�단 공간 ?�보 */
 .pg-main {
   padding-bottom: 140px;
 }
@@ -55,7 +57,7 @@ body {
   }
 }
 
-/* 헤더 */
+/* ?�더 */
 .pg-header {
   position: sticky;
   top: 0;
@@ -64,7 +66,7 @@ body {
   border-bottom: 1px solid rgba(0, 0, 0, 0.08);
 }
 
-/* 모바일 전용: 가로 스크롤 차단 + 헤더 fixed */
+/* 모바???�용: 가�??�크�?차단 + ?�더 fixed */
 @media (max-width: 768px) {
   html,
   body {
@@ -89,7 +91,7 @@ body {
     display: none;
   }
   
-  /* 모바일 탭: 가운데 정렬, overflow 차단 */
+  /* 모바???? 가?�데 ?�렬, overflow 차단 */
   .tabs-container-wrapper {
     display: flex;
     justify-content: center;
@@ -106,7 +108,7 @@ body {
     overflow-x: hidden;
   }
   
-  /* 모바일 하단 CTA: pill 형태 유지, 가운데 정렬 */
+  /* 모바???�단 CTA: pill ?�태 ?��?, 가?�데 ?�렬 */
   .mobile-cta-bar {
     display: flex !important;
     justify-content: flex-start;
@@ -134,12 +136,12 @@ body {
   }
 }
 
-/* 앵커 위치 보정 */
+/* ?�커 ?�치 보정 */
 #lead-form {
   scroll-margin-top: 120px;
 }
 
-/* 하단 고정 바 */
+/* ?�단 고정 �?*/
 .mobile-cta-bar {
   position: fixed;
   left: 0;
@@ -176,7 +178,7 @@ body {
   white-space: nowrap;
 }
 
-/* 플로팅 버튼 */
+/* ?�로??버튼 */
 .mobile-fab {
   position: fixed;
   right: max(16px, env(safe-area-inset-right));
@@ -204,7 +206,7 @@ body {
   font-size: 18px;
 }
 
-/* 데스크톱에서 fixed bottom 전폭 */
+/* ?�스?�톱?�서 fixed bottom ?�폭 */
 @media (min-width: 769px) {
   .desktop-cta-bar {
     position: fixed !important;
