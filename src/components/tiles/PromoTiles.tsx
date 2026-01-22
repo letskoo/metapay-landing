@@ -7,7 +7,6 @@ import styles from "./PromoTiles.module.css";
 type Tile = {
   label: string;  // 라벨 (나은 제목 등)
   title: string;  // 크게 나타나는 본문 텍스트
-  link?: string;  // 클릭 링크
 
   // 단색 테마 (선택)
   theme?: "yellow" | "lime" | "blue" | "pink";
@@ -18,28 +17,24 @@ type Tile = {
 
 const TILES: Tile[] = [
   {
-    label: "서비스 소개",
-    title: "빠르게 만들지만\n최고를 드립니다",
-    link: "http://pf.kakao.com/_zRMZj/chat",
-    theme: "yellow",
-  },
-  {
-    label: "대표 소개",
-    title: "말도 안되는 가격에\n직접 만들기로 했습니다",
-    link: "http://pf.kakao.com/_zRMZj/chat",
-    theme: "lime",
-  },
-  {
-    label: "제작 사례",
-    title: "1인 사업주부터\n200인 기업까지!",
-    link: "http://pf.kakao.com/_zRMZj/chat",
+    label: "돈 벌어본 구조만 만듭니다",
+    title: "실제 운영으로\n검증된 구조만 제공",
     theme: "blue",
   },
   {
-    label: "제작 가이드",
-    title: "레고 조립처럼\n말씀만 하세요",
-    link: "http://pf.kakao.com/_zRMZj/chat",
-    imageUrl: "/images/studio.jpg",
+    label: "유입 → 재방문 구조 설계",
+    title: "고객이\n다시 오게 설계합니다",
+    theme: "blue",
+  },
+  {
+    label: "광고 없이도 굴러가도록",
+    title: "운영에 돈을 안들여도\n스스로 돌아가는 구조",
+    theme: "blue",
+  },
+  {
+    label: "묶으면 더 강력한 서비스",
+    title: "웹\n포토그루브\n학원관리 = 자동수익",
+    theme: "blue",
   },
 ];
 
@@ -59,7 +54,7 @@ function themeClass(theme?: Tile["theme"]) {
 
 // 커스텀 Hook: IntersectionObserver를 사용하여 카드의 가시성 감지
 function useSlideInCard() {
-  const ref = useRef<HTMLAnchorElement | null>(null);
+  const ref = useRef<HTMLButtonElement | null>(null);
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -91,9 +86,31 @@ function PromoTiles() {
     <section id="promo-tiles" className={styles.section}>
       <div className={styles.container}>
         {/* 타일 위 텍스트 */}
-        <div className={styles.sectionText}>
-          단 14일, 빠르게 만들면 퀄리티가<br />
-          떨어진다는 편견 깨버리겠습니다
+        <div className={styles.sectionHeader} style={{ textAlign: "center", marginBottom: "40px" }}>
+          <h2
+            style={{
+              fontSize: "clamp(20px, 2.5vw, 28px)",
+              fontWeight: 800,
+              color: "#000",
+              margin: 0,
+              marginBottom: "4px",
+              lineHeight: 1.2,
+              letterSpacing: "-0.02em",
+            }}
+          >
+            왜 메타페이는 결과가 날까요?
+          </h2>
+          <p
+            style={{
+              fontSize: "clamp(13px, 1.5vw, 20px)",
+              fontWeight: 400,
+              color: "#666",
+              margin: 0,
+              lineHeight: 1.5,
+            }}
+          >
+            우리는 '만들기'보다 '팔리게 만들기'를 먼저 생각합니다.
+          </p>
         </div>
 
         {/* 타일 그리드 */}
@@ -117,11 +134,8 @@ function PromoTile({ tile }: { tile: Tile }) {
   }
 
   return (
-    <a
+    <button
       ref={ref}
-      href={tile.link}
-      target="_blank"
-      rel="noopener noreferrer"
       className={`${styles.card} ${themeClass(tile.theme)} ${
         tile.imageUrl ? styles.hasImage : ""
       } ${isVisible ? styles.visible : ""}`}
@@ -138,7 +152,7 @@ function PromoTile({ tile }: { tile: Tile }) {
         </div>
         <div className={styles.title}>{tile.title}</div>
       </div>
-    </a>
+    </button>
   );
 }
 

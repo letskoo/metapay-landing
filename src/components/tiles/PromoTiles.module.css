@@ -3,6 +3,12 @@
   padding: 40px 0;
 }
 
+@media (min-width: 769px) {
+  .section {
+    padding-top: 80px;
+  }
+}
+
 /* 공통 컨테이너 (갤러리와 동일한 폭) */
 .container {
   max-width: 1200px;
@@ -21,11 +27,19 @@
   padding-left: 12px;
 }
 
+.sectionHeader {
+  margin-bottom: 40px !important;
+}
+
 @media (max-width: 768px) {
+  .sectionHeader {
+    margin-bottom: 16px !important;
+  }
+  
   .sectionText {
     font-size: 18px;
     font-weight: 600;
-    margin-top: 16px;
+    margin-top: 0;
     margin-bottom: 24px;
     padding-left: 30px;
   }
@@ -55,13 +69,13 @@
 .card {
   position: relative;
   overflow: hidden;
-  border-radius: 10px; /* gallery cards use 10px radius */
+  border-radius: 10px;
   min-height: 260px;
 
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  box-shadow: none;
+  border: 2px solid #003DA5;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.12);
 
-  background: linear-gradient(135deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.04) 100%);
+  background: #fff;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -71,14 +85,13 @@
   padding-top: 16px;
   text-decoration: none;
 
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
   isolation: isolate;
 
   /* 초기 상태: 오른쪽에서 왼쪽으로 슬라이드 진입 */
   opacity: 0;
   transform: translateX(40px);
-  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  transition: all 0.3s ease, opacity 0.6s ease-out, transform 0.6s ease-out;
+  cursor: pointer;
 }
 
 /* 가시성 상태: 애니메이션 완료 */
@@ -87,33 +100,17 @@
   transform: translateX(0);
 }
 
-/* 그라디언트 테마 (윈도우 11 느낌) */
-.yellow {
-  background-image:
-    radial-gradient(circle at 20% 20%, rgba(140, 110, 255, 0.6), rgba(60, 120, 255, 0) 45%),
-    radial-gradient(circle at 80% 0%, rgba(90, 200, 255, 0.5), rgba(90, 200, 255, 0) 40%),
-    linear-gradient(135deg, rgba(120, 105, 255, 0.6) 0%, rgba(74, 182, 255, 0.6) 50%, rgba(162, 224, 255, 0.4) 100%);
+.card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+  transform: translateY(-2px);
 }
 
-.lime {
-  background-image:
-    radial-gradient(circle at 15% 30%, rgba(80, 220, 255, 0.55), rgba(80, 220, 255, 0) 45%),
-    radial-gradient(circle at 85% 20%, rgba(140, 255, 220, 0.5), rgba(140, 255, 220, 0) 40%),
-    linear-gradient(130deg, rgba(60, 170, 255, 0.55) 0%, rgba(110, 240, 200, 0.6) 60%, rgba(190, 255, 230, 0.35) 100%);
-}
-
-.blue {
-  background-image:
-    radial-gradient(circle at 18% 18%, rgba(120, 90, 255, 0.6), rgba(120, 90, 255, 0) 45%),
-    radial-gradient(circle at 82% 15%, rgba(90, 150, 255, 0.55), rgba(90, 150, 255, 0) 42%),
-    linear-gradient(125deg, rgba(80, 110, 255, 0.58) 0%, rgba(70, 190, 255, 0.55) 55%, rgba(120, 220, 255, 0.4) 100%);
-}
-
+/* 테마 클래스 - 모두 흰색 배경으로 통일 */
+.yellow,
+.lime,
+.blue,
 .pink {
-  background-image:
-    radial-gradient(circle at 20% 25%, rgba(255, 120, 190, 0.55), rgba(255, 120, 190, 0) 45%),
-    radial-gradient(circle at 80% 10%, rgba(170, 120, 255, 0.6), rgba(170, 120, 255, 0) 40%),
-    linear-gradient(135deg, rgba(255, 140, 200, 0.6) 0%, rgba(180, 120, 255, 0.6) 55%, rgba(120, 160, 255, 0.4) 100%);
+  background: #fff !important;
 }
 
 /* 사진 카드일 때 */
@@ -155,31 +152,34 @@
   left: 28px;
   right: 28px;
   z-index: 2;
-  color: white;
+  color: #003DA5;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 25px;
 }
 
 @media (max-width: 768px) {
   .content {
-    top: 35px;
+    top: 24px;
     left: 40px;
     right: 20px;
+    gap: 25px;
   }
 }
 
 .labelWithArrow {
-  display: inline-flex;   /* 🔴 flex → inline-flex */
+  display: inline-flex;
   align-items: center;
   gap: 8px;
   font-size: 13px;
   font-weight: 600;
   opacity: 0.95;
+  margin: 0;
 }
 
 .label {
-  flex: none;             /* 🔴 1 → none */
+  flex: none;
+  margin: 0;
 }
 
 
@@ -187,7 +187,7 @@
   flex-shrink: 0;
   width: 20px;
   height: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.7);
+  border: 1px solid #003DA5;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -199,7 +199,7 @@
   content: "";
   width: 6px;
   height: 6px;
-  border: solid white;
+  border: solid #003DA5;
   border-width: 2px 2px 0 0;
   transform: rotate(45deg);
 }
@@ -208,10 +208,13 @@
   font-size: 22px;
   font-weight: 700;
   line-height: 1.25;
+  margin: 0;
+  padding: 0;
 
-  white-space: pre-line;   /* \n 줄바꿈 적용 */
-  display: block;          /* -webkit-box 제거 */
-  overflow: visible;       /* hidden 제거(필요시) */
+  white-space: pre-line;
+  display: block;
+  overflow: visible;
+  text-align: left;
 }
 
 

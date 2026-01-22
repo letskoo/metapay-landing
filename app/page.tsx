@@ -4,7 +4,6 @@ import StickyHeader from "@/src/components/header/StickyHeader";
 import HeroIntro from "@/src/components/sections/HeroIntro";
 import GallerySection from "@/src/components/sections/GallerySection";
 import ConversionForm from "@/src/components/forms/ConversionForm";
-import MobileCtaBar from "@/src/components/cta/MobileCtaBar";
 import FloatingActionButton from "@/src/components/cta/FloatingActionButton";
 import PromoTiles from "@/src/components/tiles/PromoTiles";
 import MidCtaSection from "@/src/components/sections/MidCtaSection";
@@ -23,13 +22,13 @@ export default function Page() {
       {/* 히어로 섹션 */}
       <HeroIntro />
 
-      {/* 갤러리 섹션 */}
-      <GallerySection />
-
       <main className="pg-main">
         <div id="promo-tiles">
           <PromoTiles />
         </div>
+
+        {/* 갤러리 섹션 */}
+        <GallerySection />
         
         {/* 중간 CTA 섹션 */}
         <MidCtaSection />
@@ -59,7 +58,6 @@ export default function Page() {
 
       <FooterSection />
 
-      <MobileCtaBar />
       <FloatingActionButton />
     </>
   );

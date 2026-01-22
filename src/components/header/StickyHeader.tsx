@@ -111,15 +111,7 @@ export default function StickyHeader() {
 
       {/* 데스크톱 헤더 크기 증가 스타일 */}
       <style>{`
-        @media (min-width: 768px) {
-          .pg-header {
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            background-color: white;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-          }
-
+        @media (min-width: 769px) {
           .pg-header .header-wrapper {
             padding: 20px 20px;
           }

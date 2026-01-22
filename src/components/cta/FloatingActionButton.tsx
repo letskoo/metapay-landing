@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useState } from "react";
 
 const PHONE_NUMBER = "010-0000-0000"; // TODO: 실제 번호로 교체
 const KAKAO_URL = "http://pf.kakao.com/_zRMZj";
@@ -16,6 +17,8 @@ interface FloatingButton {
 }
 
 export default function FloatingActionButton() {
+  const [imageErrors, setImageErrors] = useState<Record<string, boolean>>({});
+
   const handleScrollToForm = () => {
     const formElement = document.getElementById("lead-form");
     if (formElement) {
@@ -65,14 +68,13 @@ export default function FloatingActionButton() {
 
   return (
     <div
-      className="floating-action-buttons"
+      className="mobile-fab"
       style={{
         position: "fixed",
         right: "20px",
-        bottom: "100px",
         display: "flex",
         flexDirection: "column",
-        gap: "8px",
+        gap: "12px",
         zIndex: 999,
       }}
     >
@@ -118,34 +120,26 @@ export default function FloatingActionButton() {
         >
           {/* 카카오 버튼: 아이콘 크게 */}
           {btn.id === "kakao" && btn.icon && (
-            <img
-              src={btn.icon}
-              alt={btn.label}
-              width={30}
-              height={30}
-              style={{
-                objectFit: "contain",
-                display: "block",
-                margin: "0 auto",
-              }}
-              onError={(e) => {
-                // Fallback: SVG 말풍선 아이콘
-                const target = e.target as HTMLImageElement;
-                target.style.display = "none";
-                const parent = target.parentElement;
-                if (parent) {
-                  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-                  svg.setAttribute("width", "28");
-                  svg.setAttribute("height", "28");
-                  svg.setAttribute("viewBox", "0 0 24 24");
-                  svg.setAttribute("fill", "#3C1E1E");
-                  const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-                  path.setAttribute("d", "M12 2C6.48 2 2 5.58 2 10c0 2.54 1.19 4.85 3.15 6.37.15.1.24.3.2.48l-.5 2.5c-.07.35.27.6.56.37l2.9-2.07c.14-.1.32-.1.47 0 .96.59 2.06.91 3.22.91 5.52 0 10-3.58 10-8 0-4.42-4.48-8-10-8z");
-                  svg.appendChild(path);
-                  parent.appendChild(svg);
-                }
-              }}
-            />
+            <>
+              {!imageErrors.kakao ? (
+                <img
+                  src={btn.icon}
+                  alt={btn.label}
+                  width={30}
+                  height={30}
+                  style={{
+                    objectFit: "contain",
+                    display: "block",
+                    margin: "0 auto",
+                  }}
+                  onError={() => setImageErrors(prev => ({ ...prev, kakao: true }))}
+                />
+              ) : (
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="#3C1E1E">
+                  <path d="M12 2C6.48 2 2 5.58 2 10c0 2.54 1.19 4.85 3.15 6.37.15.1.24.3.2.48l-.5 2.5c-.07.35.27.6.56.37l2.9-2.07c.14-.1.32-.1.47 0 .96.59 2.06.91 3.22.91 5.52 0 10-3.58 10-8 0-4.42-4.48-8-10-8z" />
+                </svg>
+              )}
+            </>
           )}
           {/* TOP 버튼: 화살표 + TEXT */}
           {btn.id === "top" && btn.icon && (
@@ -187,35 +181,26 @@ export default function FloatingActionButton() {
           )}
           {/* 전화 버튼: 아이콘만 */}
           {btn.id === "phone" && btn.icon && (
-            <img
-              src={btn.icon}
-              alt={btn.label}
-              width={28}
-              height={28}
-              style={{
-                objectFit: "contain",
-                display: "block",
-                margin: "0 auto",
-              }}
-              onError={(e) => {
-                // Fallback: SVG 수화기 아이콘
-                const target = e.target as HTMLImageElement;
-                target.style.display = "none";
-                const parent = target.parentElement;
-                if (parent) {
-                  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-                  svg.setAttribute("width", "22");
-                  svg.setAttribute("height", "22");
-                  svg.setAttribute("viewBox", "0 0 24 24");
-                  svg.setAttribute("fill", "none");
-                  const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-                  path.setAttribute("d", "M6.62 10.79C8.06 13.62 10.38 15.94 13.21 17.38L15.41 15.18C15.69 14.9 16.08 14.82 16.43 14.93C17.55 15.3 18.75 15.5 20 15.5C20.55 15.5 21 15.95 21 16.5V20C21 20.55 20.55 21 20 21C10.61 21 3 13.39 3 4C3 3.45 3.45 3 4 3H7.5C8.05 3 8.5 3.45 8.5 4C8.5 5.25 8.7 6.45 9.07 7.57C9.18 7.92 9.1 8.31 8.82 8.59L6.62 10.79Z");
-                  path.setAttribute("fill", "white");
-                  svg.appendChild(path);
-                  parent.appendChild(svg);
-                }
-              }}
-            />
+            <>
+              {!imageErrors.phone ? (
+                <img
+                  src={btn.icon}
+                  alt={btn.label}
+                  width={28}
+                  height={28}
+                  style={{
+                    objectFit: "contain",
+                    display: "block",
+                    margin: "0 auto",
+                  }}
+                  onError={() => setImageErrors(prev => ({ ...prev, phone: true }))}
+                />
+              ) : (
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                  <path d="M6.62 10.79C8.06 13.62 10.38 15.94 13.21 17.38L15.41 15.18C15.69 14.9 16.08 14.82 16.43 14.93C17.55 15.3 18.75 15.5 20 15.5C20.55 15.5 21 15.95 21 16.5V20C21 20.55 20.55 21 20 21C10.61 21 3 13.39 3 4C3 3.45 3.45 3 4 3H7.5C8.05 3 8.5 3.45 8.5 4C8.5 5.25 8.7 6.45 9.07 7.57C9.18 7.92 9.1 8.31 8.82 8.59L6.62 10.79Z" fill="white" />
+                </svg>
+              )}
+            </>
           )}
         </a>
       ))}

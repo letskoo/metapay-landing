@@ -11,7 +11,7 @@ html {
   scroll-behavior: smooth;
 }
 
-/* ?�역 가�??�크�?차단 */
+/* ?�역 가�??�크�?차단 */
 html,
 body,
 #__next,
@@ -20,7 +20,7 @@ main {
   overflow-x: hidden;
 }
 
-/* ?�어�??�션 ?�니메이??*/
+/* ?�어�??�션 ?�니메이??*/
 @keyframes slideDownFadeIn {
   0% {
     opacity: 0;
@@ -38,9 +38,16 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
   overflow-x: hidden;
+  padding-top: 70px; /* Fixed header 높이 확보 */
 }
 
-/* 메인 ?�단 공간 ?�보 */
+@media (max-width: 768px) {
+  body {
+    padding-top: 56px; /* 모바일 header 높이 */
+  }
+}
+
+/* 메인 ?�단 공간 ?�보 */
 .pg-main {
   padding-bottom: 140px;
 }
@@ -51,34 +58,23 @@ body {
   }
 }
 
-@media (max-width: 768px) {
-  .pg-main {
-    padding-top: 56px;
-  }
-}
-
-/* ?�더 */
+/* ?�더 */
 .pg-header {
-  position: sticky;
+  position: fixed;
   top: 0;
-  z-index: 2000;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 1000;
   background: #fff;
   border-bottom: 1px solid rgba(0, 0, 0, 0.08);
 }
 
-/* 모바???�용: 가�??�크�?차단 + ?�더 fixed */
+/* 모바???�용: 가�??�크�?차단 */
 @media (max-width: 768px) {
   html,
   body {
     overflow-x: hidden;
-    width: 100%;
-  }
-  
-  .pg-header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
     width: 100%;
   }
   
@@ -91,7 +87,7 @@ body {
     display: none;
   }
   
-  /* 모바???? 가?�데 ?�렬, overflow 차단 */
+  /* 모바???? 가?�데 ?�렬, overflow 차단 */
   .tabs-container-wrapper {
     display: flex;
     justify-content: center;
@@ -107,82 +103,24 @@ body {
     align-items: center;
     overflow-x: hidden;
   }
-  
-  /* 모바???�단 CTA: pill ?�태 ?��?, 가?�데 ?�렬 */
-  .mobile-cta-bar {
-    display: flex !important;
-    justify-content: flex-start;
-    align-items: center;
-    padding: 12px 16px calc(12px + env(safe-area-inset-bottom)) !important;
-    overflow-x: hidden;
-    width: 100%;
-    height: auto;
-  }
-  
-  .cta-buttons-wrapper {
-    width: 100%;
-    display: flex !important;
-    gap: 10px;
-  }
-  
-  .mobile-cta-bar .mobile-cta-btn {
-    height: 44px;
-    padding: 0 18px;
-    flex: 1;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
 }
 
-/* ?�커 ?�치 보정 */
+/* 앵커 위치 보정 */
 #lead-form {
   scroll-margin-top: 120px;
 }
-
-/* ?�단 고정 �?*/
-.mobile-cta-bar {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 5000;
-  width: 100%;
-  max-width: 100%;
-  box-sizing: border-box;
-  overflow: hidden;
-
-  background: #fff;
-  padding: 12px 14px calc(12px + env(safe-area-inset-bottom));
-  box-shadow: none;
-
-  display: flex;
-  gap: 10px;
+#promo-tiles {
+  scroll-margin-top: 90px;
 }
 
-.mobile-cta-btn {
-  flex: 1;
-  height: 56px;
-  border-radius: 14px;
-  background: #0b0b0b;
-  color: #fff;
-  font-weight: 800;
-  font-size: 14px;
-
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  text-decoration: none;
-  white-space: nowrap;
+#photo-slide {
+  scroll-margin-top: 90px;
 }
-
-/* ?�로??버튼 */
+/* 플로팅 버튼 */
 .mobile-fab {
   position: fixed;
   right: max(16px, env(safe-area-inset-right));
-  bottom: calc(96px + env(safe-area-inset-bottom));
+  bottom: calc(16px + env(safe-area-inset-bottom));
   z-index: 5100;
 
   display: flex;
@@ -206,33 +144,16 @@ body {
   font-size: 18px;
 }
 
-/* ?�스?�톱?�서 fixed bottom ?�폭 */
+/* 모바일에서 플로팅 버튼 더 아래로 */
+@media (max-width: 768px) {
+  .mobile-fab {
+    bottom: calc(25px + env(safe-area-inset-bottom));
+  }
+}
+
+/* 데스크톱에서 플로팅 버튼 위치 */
 @media (min-width: 769px) {
-  .desktop-cta-bar {
-    position: fixed !important;
-    bottom: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    width: 100% !important;
-    background: #fff !important;
-    padding: 12px 16px !important;
-    z-index: 5000 !important;
-    box-shadow: none;
-    max-width: none;
-    transform: none;
-  }
-  
-  .cta-buttons-wrapper {
-    width: 100%;
-    max-width: 520px;
-    margin: 0 auto;
-    display: flex;
-    gap: 10px;
-  }
-  
-  .desktop-cta-bar .mobile-cta-btn {
-    flex: 1;
-    height: 56px;
-    font-size: 14px;
+  .mobile-fab {
+    bottom: 50px;
   }
 }
