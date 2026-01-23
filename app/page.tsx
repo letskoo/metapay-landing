@@ -19,17 +19,15 @@ export default function Page() {
     <>
       <StickyHeader />
       
-      {/* 히어로 섹션 */}
+      {/* 히어로 섹션 (고정 헤더 위로 겹쳐서 표시) */}
       <HeroIntro />
 
-      <main className="pg-main">
-        <div id="promo-tiles">
-          <PromoTiles />
-        </div>
+      {/* 프로모 타일 섹션 - Hero 바로 아래 */}
+      <div id="promo-tiles">
+        <PromoTiles />
+      </div>
 
-        {/* 갤러리 섹션 */}
-        <GallerySection />
-        
+      <main className="pg-main" style={{ position: "relative", zIndex: 2 }}>
         {/* 중간 CTA 섹션 */}
         <MidCtaSection />
         
@@ -49,6 +47,9 @@ export default function Page() {
 
         {/* 블랙 CTA 섹션 */}
         <BlackCtaSection />
+
+        {/* 갤러리 섹션 */}
+        <GallerySection />
 
         {/* 앵커 타겟 */}
         <div id="lead-form">

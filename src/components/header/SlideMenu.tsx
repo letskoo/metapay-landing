@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useCallback } from "react";
 
 interface MenuItem {
   label: string;
@@ -17,27 +17,36 @@ interface SlideMenuProps {
 export default function SlideMenu({ isOpen, onClose, items }: SlideMenuProps) {
   const menuRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    // ESC 키로 닫기
-    const handleEscape = (e: KeyboardEvent) => {
+  // handleEscape를 useCallback으로 메모이제이션
+  // isOpen과 onClose 의존성만 가지고, 함수 참조가 일정함
+  const handleEscape = useCallback(
+    (e: KeyboardEvent) => {
       if (e.key === "Escape" && isOpen) {
         onClose();
       }
-    };
+    },
+    [isOpen, onClose]
+  );
 
-    // 메뉴 열릴 때 body 스크롤 잠금
-    if (isOpen) {
-      document.body.style.overflow = "hidden";
-      window.addEventListener("keydown", handleEscape);
-    } else {
+  useEffect(() => {
+    // 메뉴 열릴 때만 리스너 등록
+    if (!isOpen) {
       document.body.style.overflow = "unset";
+      return;
     }
 
+    // 메뉴 열릴 때 body 스크롤 잠금
+    document.body.style.overflow = "hidden";
+
+    // 동일한 함수 참조로 리스너 등록
+    window.addEventListener("keydown", handleEscape);
+
+    // cleanup에서도 동일한 함수 참조로 제거 (멱등성 보장)
     return () => {
       document.body.style.overflow = "unset";
       window.removeEventListener("keydown", handleEscape);
     };
-  }, [isOpen, onClose]);
+  }, [isOpen, handleEscape]);
 
   const handleMenuItemClick = (item: MenuItem) => {
     if (item.id) {

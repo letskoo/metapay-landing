@@ -11,16 +11,7 @@ html {
   scroll-behavior: smooth;
 }
 
-/* ?�역 가�??�크�?차단 */
-html,
-body,
-#__next,
-main {
-  width: 100%;
-  overflow-x: hidden;
-}
-
-/* ?�어�??�션 ?�니메이??*/
+/* 전역 애니메이션 정의 */
 @keyframes slideDownFadeIn {
   0% {
     opacity: 0;
@@ -32,22 +23,48 @@ main {
   }
 }
 
+@keyframes zoomIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* 레이아웃 기본 설정 */
+html,
+body,
+#__next,
+main {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+/* 히어로 섹션 스타일 정의 */
+.pg-main {
+  position: relative;
+  z-index: 2;
+}
+
 body {
   margin: 0;
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
   overflow-x: hidden;
-  padding-top: 70px; /* Fixed header 높이 확보 */
+  padding-top: 0;
 }
 
 @media (max-width: 768px) {
   body {
-    padding-top: 56px; /* 모바일 header 높이 */
+    padding-top: 0;
   }
 }
 
-/* 메인 ?�단 공간 ?�보 */
+/* 메인 단락 공간 확보 */
 .pg-main {
   padding-bottom: 140px;
 }

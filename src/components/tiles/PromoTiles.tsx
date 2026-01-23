@@ -1,159 +1,136 @@
 "use client";
 
-import type { CSSProperties } from "react";
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import styles from "./PromoTiles.module.css";
 
-type Tile = {
-  label: string;  // 라벨 (나은 제목 등)
-  title: string;  // 크게 나타나는 본문 텍스트
-
-  // 단색 테마 (선택)
-  theme?: "yellow" | "lime" | "blue" | "pink";
-
-  // 사진 배경 (선택) — public/images/... 에 넣고 "/images/xxx.jpg"
-  imageUrl?: string;
+type TileCard = {
+  id: number;
+  title: string;
+  description: string;
+  imageUrl: string;
+  bgColor: string;
 };
 
-const TILES: Tile[] = [
+const CARDS: TileCard[] = [
   {
-    label: "돈 벌어본 구조만 만듭니다",
-    title: "실제 운영으로\n검증된 구조만 제공",
-    theme: "blue",
+    id: 1,
+    title: "결혼식 신문화\n네컷사진 앨범",
+    description: "하객들이 자유롭게 찍은 네컷사진을\n방명록 앨범으로 만들어 드립니다",
+    imageUrl: "/images/tile-01.png",
+    bgColor: "#1a1a1a",
   },
   {
-    label: "유입 → 재방문 구조 설계",
-    title: "고객이\n다시 오게 설계합니다",
-    theme: "blue",
+    id: 2,
+    title: "대학교 행사\n이제 네컷사진이 대세",
+    description: "총학생 선거부터 대동제 축제까지\n행사 컨셉에 맞춘 프레임으로 퀄리티 UP",
+    imageUrl: "/images/tile-02.png",
+    bgColor: "#2d5f4f",
   },
   {
-    label: "광고 없이도 굴러가도록",
-    title: "운영에 돈을 안들여도\n스스로 돌아가는 구조",
-    theme: "blue",
+    id: 3,
+    title: "유치원 · 학교 행사의\n만족감 높이는 네컷사진",
+    description: "졸업식, 입학식, 체육대회\n최고 인기는 네컷사진",
+    imageUrl: "/images/tile-03.png",
+    bgColor: "#1e3a8a",
   },
   {
-    label: "묶으면 더 강력한 서비스",
-    title: "웹\n포토그루브\n학원관리 = 자동수익",
-    theme: "blue",
+    id: 4,
+    title: "기업 행사\n고객 참여형 마케팅",
+    description: "기업 내 행사부터 극장, 공연, 관공서까지\n고객 체험 유도 부스로 활용",
+    imageUrl: "/images/tile-04.png",
+    bgColor: "#5b21b6",
   },
 ];
 
-function themeClass(theme?: Tile["theme"]) {
-  switch (theme) {
-    case "lime":
-      return styles.lime;
-    case "blue":
-      return styles.blue;
-    case "pink":
-      return styles.pink;
-    case "yellow":
-    default:
-      return styles.yellow;
-  }
-}
-
-// 커스텀 Hook: IntersectionObserver를 사용하여 카드의 가시성 감지
-function useSlideInCard() {
-  const ref = useRef<HTMLButtonElement | null>(null);
+export default function PromoTiles() {
+  const sectionRef = useRef<HTMLElement>(null);
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    if (!ref.current) return;
+    const element = sectionRef.current;
+    if (!element) return;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        // threshold 0.5일 때 (화면 중앙 도달 시) 한 번만 애니메이션 실행
         if (entry.isIntersecting && !isVisible) {
           setIsVisible(true);
-          observer.unobserve(ref.current!);
+          observer.unobserve(element);
         }
       },
-      { threshold: 0.5 } // 화면 중앙(50%)에서 감지
+      { 
+        threshold: 0,
+        rootMargin: "-50% 0px -50% 0px"
+      }
     );
 
-    observer.observe(ref.current);
+    observer.observe(element);
 
     return () => {
-      observer.disconnect();
+      if (element && observer) {
+        observer.disconnect();
+      }
     };
   }, [isVisible]);
 
-  return { ref, isVisible };
-}
-
-function PromoTiles() {
   return (
-    <section id="promo-tiles" className={styles.section}>
+    <section ref={sectionRef} className={styles.section}>
       <div className={styles.container}>
-        {/* 타일 위 텍스트 */}
-        <div className={styles.sectionHeader} style={{ textAlign: "center", marginBottom: "40px" }}>
-          <h2
-            style={{
-              fontSize: "clamp(20px, 2.5vw, 28px)",
-              fontWeight: 800,
-              color: "#000",
-              margin: 0,
-              marginBottom: "4px",
-              lineHeight: 1.2,
-              letterSpacing: "-0.02em",
-            }}
-          >
-            왜 메타페이는 결과가 날까요?
+        {/* 섹션 타이틀 */}
+        <div
+          className={`${styles.header} ${
+            isVisible ? styles.headerVisible : styles.headerHidden
+          }`}
+        >
+          <h2 className={styles.mainTitle}>
+            특별함을 사진으로 기록하다
+            <br />
+            렌탈의 새로운 기준
           </h2>
-          <p
-            style={{
-              fontSize: "clamp(13px, 1.5vw, 20px)",
-              fontWeight: 400,
-              color: "#666",
-              margin: 0,
-              lineHeight: 1.5,
-            }}
-          >
-            우리는 '만들기'보다 '팔리게 만들기'를 먼저 생각합니다.
-          </p>
+          <p className={styles.subTitle}>참여형 행사로 재미와 추억을 모두 잡다</p>
         </div>
 
-        {/* 타일 그리드 */}
+        {/* 카드 그리드 */}
         <div className={styles.grid}>
-          {TILES.map((tile) => (
-            <PromoTile key={tile.title} tile={tile} />
-          ))}
+          {CARDS.map((card, index) => {
+            // 인덱스 0,1은 왼쪽에서, 2,3은 오른쪽에서
+            const direction = index <= 1 ? styles.fromLeft : styles.fromRight;
+            // 딜레이: 0,2는 0.1s, 1,3은 0.25s
+            const delay = index % 2 === 0 ? "0.1s" : "0.25s";
+
+            return (
+              <div
+                key={card.id}
+                className={`${styles.card} ${direction} ${
+                  isVisible ? styles.cardVisible : ""
+                }`}
+                style={{
+                  backgroundColor: card.bgColor,
+                  transitionDelay: delay,
+                }}
+              >
+                {/* 이미지 영역 */}
+                <div className={styles.imageWrapper}>
+                  <Image
+                    src={card.imageUrl}
+                    alt={card.title}
+                    fill
+                    style={{ objectFit: "cover" }}
+                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                  />
+                </div>
+
+                {/* 텍스트 영역 */}
+                <div className={styles.content}>
+                  <h3 className={styles.cardTitle}>{card.title}</h3>
+                  <div className={styles.divider} />
+                  <p className={styles.cardDesc}>{card.description}</p>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>
   );
 }
-
-// 개별 타일 컴포넌트 (IntersectionObserver 적용)
-function PromoTile({ tile }: { tile: Tile }) {
-  const { ref, isVisible } = useSlideInCard();
-
-  const styleVars: CSSProperties = {};
-  if (tile.imageUrl) {
-    (styleVars as any)["--tile-bg-image"] = `url(${tile.imageUrl})`;
-  }
-
-  return (
-    <button
-      ref={ref}
-      className={`${styles.card} ${themeClass(tile.theme)} ${
-        tile.imageUrl ? styles.hasImage : ""
-      } ${isVisible ? styles.visible : ""}`}
-      style={tile.imageUrl ? styleVars : undefined}
-    >
-      {/* 배경 이미지 타일에만 오버레이 적용 */}
-      {tile.imageUrl && <div className={styles.overlay}></div>}
-
-      {/* 타일 내용 (상단 배치) */}
-      <div className={styles.content}>
-        <div className={styles.labelWithArrow}>
-          <span className={styles.label}>{tile.label}</span>
-          <span className={styles.arrow}></span>
-        </div>
-        <div className={styles.title}>{tile.title}</div>
-      </div>
-    </button>
-  );
-}
-
-export default PromoTiles;

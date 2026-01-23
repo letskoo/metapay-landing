@@ -63,14 +63,17 @@ export default function GallerySection() {
     setSelectedIndex(newIndex);
   }, [selectedIndex, images.length]);
 
-  // ESC 키 핸들러
-  useEffect(() => {
-    const handleEsc = (e: KeyboardEvent) => {
+  // ESC 키 핸들러 (메모이제이션하여 함수 참조 일정화)
+  const handleEsc = useCallback(
+    (e: KeyboardEvent) => {
       if (e.key === "Escape" && selectedIndex !== null) {
         closeModal();
       }
-    };
+    },
+    [selectedIndex, closeModal]
+  );
 
+  useEffect(() => {
     if (selectedIndex !== null) {
       window.addEventListener("keydown", handleEsc);
       document.body.style.overflow = "hidden";
@@ -80,7 +83,7 @@ export default function GallerySection() {
       window.removeEventListener("keydown", handleEsc);
       document.body.style.overflow = "";
     };
-  }, [selectedIndex, closeModal]);
+  }, [selectedIndex, handleEsc]);
 
   // 초기 로드 시 중간 세트로 스크롤 위치 설정 (무한 루프 초기화)
   useEffect(() => {
@@ -139,8 +142,9 @@ export default function GallerySection() {
     container.addEventListener('scroll', handleScrollEnd);
 
     return () => {
+      window.clearTimeout(scrollTimer);
+      // container는 이미 있으므로 안전하게 제거 가능
       container.removeEventListener('scroll', handleScrollEnd);
-      clearTimeout(scrollTimer);
     };
   }, [images.length, isDragging, isInitialized]);
 

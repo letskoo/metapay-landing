@@ -1,0 +1,217 @@
+/* 헤더 기본 상태: 초기에 숨김 */
+.header {
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 1;
+  background-color: transparent;
+  box-shadow: none;
+  transition: all 0.3s ease;
+  position: absolute;
+  transform: translateY(-100%);
+  opacity: 0;
+  pointer-events: auto;
+}
+
+/* 헤더 숨김 상태 */
+.header.hidden {
+  position: absolute;
+  transform: translateY(-100%);
+  opacity: 0;
+  background-color: transparent;
+  box-shadow: none;
+  z-index: 1;
+  pointer-events: auto;
+}
+
+/* 헤더 나타남 상태 */
+.header.visible {
+  position: fixed;
+  transform: translateY(0);
+  opacity: 1;
+  background-color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 9999;
+  pointer-events: auto;
+}
+
+/* 헤더 래퍼 */
+.wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+
+.header.visible .wrapper {
+  padding: 16px 20px;
+}
+
+/* 로고 */
+.logo {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  flex: 1;
+  justify-content: center;
+  transition: opacity 0.3s ease;
+}
+
+/* 로고 이미지 */
+.logoImage {
+  object-fit: contain;
+  width: 160px;
+  height: 40px;
+  filter: brightness(0) invert(1);
+  transition: filter 0.3s ease;
+  display: block;
+}
+
+.header.visible .logoImage {
+  filter: none;
+  width: 180px;
+  height: 50px;
+}
+
+/* 메뉴 버튼 (햄버거) */
+.menuButton {
+  background: none;
+  border: none;
+  font-size: 24px;
+  font-weight: 700;
+  cursor: pointer;
+  color: #fff;
+  padding: 4px 8px;
+  position: absolute;
+  left: 16px;
+  transition: color 0.3s ease;
+  display: block;
+}
+
+.header.visible .menuButton {
+  color: #333;
+}
+
+/* 메뉴 */
+.menu {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* 메뉴 항목 */
+.menuItem {
+  background: none;
+  border: none;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  color: #fff;
+  padding: 8px 20px;
+  transition: color 0.3s ease;
+  white-space: nowrap;
+  display: inline-block;
+}
+
+.header.visible .menuItem {
+  color: #333;
+}
+
+.menuItem:hover {
+  color: #0066cc;
+}
+
+.header.visible .menuItem:hover {
+  color: #0066cc;
+}
+
+/* 데스크톱 전용 메뉴 */
+.desktopOnly {
+  display: none;
+}
+
+/* 모바일 전용 요소 */
+.mobileOnly {
+  display: block;
+}
+
+/* 데스크톱 반응형 (769px 이상) */
+@media (min-width: 769px) {
+  .wrapper {
+    padding: 16px 20px;
+    justify-content: space-between;
+  }
+
+  .header.scrolled .wrapper {
+    padding: 16px 20px;
+  }
+
+  .logo {
+    flex: 0 0 auto;
+    justify-content: flex-start;
+  }
+
+  .logoImage {
+    width: 180px;
+    height: 50px;
+  }
+
+  .header.scrolled .logoImage {
+    width: 180px;
+    height: 50px;
+  }
+
+  .mobileOnly {
+    display: none !important;
+  }
+
+  .desktopOnly {
+    display: flex !important;
+  }
+
+  .menu {
+    gap: 4px;
+  }
+
+  .menuItem {
+    padding: 12px 16px;
+    font-size: 15px;
+  }
+}
+
+/* 모바일 반응형 (768px 이하) */
+@media (max-width: 768px) {
+  .wrapper {
+    padding: 12px 20px;
+  }
+
+  .logo {
+    flex: 1;
+    justify-content: center;
+  }
+
+  .logoImage {
+    width: 140px;
+    height: 35px;
+  }
+
+  .header.scrolled .logoImage {
+    width: 160px;
+    height: 40px;
+  }
+
+  .menuButton {
+    font-size: 20px;
+  }
+
+  .desktopOnly {
+    display: none !important;
+  }
+}

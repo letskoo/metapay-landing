@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import SlideMenu from "./SlideMenu";
+import styles from "./StickyHeader.module.css";
 
 interface MenuItem {
   label: string;
@@ -13,11 +14,23 @@ interface MenuItem {
 
 export default function StickyHeader() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [headerState, setHeaderState] = useState<"hidden" | "visible">("hidden");
   const router = useRouter();
 
   const handleLogoClick = useCallback(() => {
     router.refresh();
   }, [router]);
+
+  // 스크롤 감지 - Hero 영역을 벗어나면 헤더 표시 (메모이제이션하여 함수 참조 일정화)
+  const handleScroll = useCallback(() => {
+    const scrollY = window.scrollY;
+    setHeaderState(scrollY > 400 ? "visible" : "hidden");
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [handleScroll]);
 
   const menuItems: MenuItem[] = [
     {
@@ -42,52 +55,40 @@ export default function StickyHeader() {
     },
   ];
 
+  const handleMenuClick = (item: MenuItem) => {
+    if (item.onClick) {
+      item.onClick();
+    } else if (item.id) {
+      const element = document.getElementById(item.id);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+  };
+
   return (
     <>
-      <header className="pg-header">
-        <div
-          className="header-wrapper"
-          style={{
-            maxWidth: 1200,
-            margin: "0 auto",
-            padding: "12px 20px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            position: "relative",
-          }}
-        >
-          {/* 햄버거 메뉴 버튼 (왼쪽) - 모든 화면에 표시 */}
+      <header
+        className={`${styles.header} ${
+          headerState === "visible" ? styles.visible : styles.hidden
+        }`}
+      >
+        <div className={styles.wrapper}>
+          {/* 모바일 햄버거 메뉴 */}
           <button
-            className="header-menu-button"
+            className={`${styles.menuButton} ${styles.mobileOnly}`}
             onClick={() => setIsMenuOpen(true)}
-            style={{
-              background: "none",
-              border: "none",
-              fontSize: "24px",
-              fontWeight: 700,
-              cursor: "pointer",
-              color: "#333",
-              padding: "4px 8px",
-              position: "absolute",
-              left: "16px",
-            }}
             aria-label="메뉴 열기"
           >
             ☰
           </button>
 
-          {/* 로고 (항상 가운데 정렬) */}
+          {/* 로고 */}
           <div
-            className="header-logo"
+            className={styles.logo}
             onClick={handleLogoClick}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              cursor: "pointer",
-              flex: 1,
-              justifyContent: "center",
-            }}
+            role="button"
+            tabIndex={0}
           >
             <Image
               src="/images/logo.png"
@@ -95,33 +96,31 @@ export default function StickyHeader() {
               width={160}
               height={40}
               priority
-              style={{ objectFit: "contain" }}
-              className="header-logo-image"
+              className={styles.logoImage}
             />
           </div>
+
+          {/* 데스크톱 메뉴 */}
+          <nav className={`${styles.menu} ${styles.desktopOnly}`}>
+            {menuItems.map((item, index) => (
+              <button
+                key={index}
+                className={styles.menuItem}
+                onClick={() => handleMenuClick(item)}
+              >
+                {item.label}
+              </button>
+            ))}
+          </nav>
         </div>
       </header>
 
-      {/* 슬라이드 메뉴 - 모든 화면에서 동작 */}
+      {/* 슬라이드 메뉴 */}
       <SlideMenu
         isOpen={isMenuOpen}
         onClose={() => setIsMenuOpen(false)}
         items={menuItems}
       />
-
-      {/* 데스크톱 헤더 크기 증가 스타일 */}
-      <style>{`
-        @media (min-width: 769px) {
-          .pg-header .header-wrapper {
-            padding: 20px 20px;
-          }
-
-          .header-logo-image {
-            width: 200px !important;
-            height: 50px !important;
-          }
-        }
-      `}</style>
     </>
   );
 }

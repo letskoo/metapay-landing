@@ -13,10 +13,6 @@ export default function SquareGallerySection() {
   const [scrollLeft, setScrollLeft] = useState(0);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [isInitialized, setIsInitialized] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
-  const sectionRef = useRef<HTMLElement>(null);
-  const [displayCount, setDisplayCount] = useState(4);
-  const [windowWidth, setWindowWidth] = useState<number | null>(null);
 
   // 반응형 카드 폭 설정
   const CARD_WIDTH = {
@@ -76,52 +72,25 @@ export default function SquareGallerySection() {
     fetchImages();
   }, []);
 
-  // 윈도우 크기 감지 및 displayCount 설정
-  const calculateItemsPerPage = (width: number): number => {
-    if (width <= 768) return 6; // 모바일: 2열 × 3줄 = 6개
-    return 6; // 데스크톱: 6열 × 1줄 = 6개
-  };
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    const handleResize = () => {
-      const width = window.innerWidth;
-      setWindowWidth(width);
-      setDisplayCount(calculateItemsPerPage(width));
-    };
-
-    // 초기값 설정
-    handleResize();
-
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
   // IntersectionObserver로 섹션 진입 감지
   useEffect(() => {
-    const element = sectionRef.current;
-    if (!element) return;
+    if (!sectionRef.current) return;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting && !isVisible) {
           console.log('[Gallery Component] Section visible, triggering animation');
           setIsVisible(true);
-          if (sectionRef.current) {
-            observer.unobserve(sectionRef.current);
-          }
+          observer.unobserve(sectionRef.current!);
         }
       },
       { threshold: 0.15 }
     );
 
-    observer.observe(element);
+    observer.observe(sectionRef.current);
 
     return () => {
-      if (element && observer) {
-        observer.disconnect();
-      }
+      observer.disconnect();
     };
   }, [isVisible]);
 
@@ -149,9 +118,9 @@ export default function SquareGallerySection() {
     setSelectedIndex(newIndex);
   }, [selectedIndex, images.length]);
 
-  // ESC 키 및 화살표 키 핸들러 (메모이제이션하여 함수 참조 일정화)
-  const handleKeyDown = useCallback(
-    (e: KeyboardEvent) => {
+  // ESC 키 및 화살표 키 핸들러
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
       if (selectedIndex === null) return;
 
       switch (e.key) {
@@ -165,11 +134,8 @@ export default function SquareGallerySection() {
           goToNext();
           break;
       }
-    },
-    [selectedIndex, closeModal, goToPrevious, goToNext]
-  );
+    };
 
-  useEffect(() => {
     if (selectedIndex !== null) {
       window.addEventListener("keydown", handleKeyDown);
       document.body.style.overflow = "hidden";
@@ -179,19 +145,10 @@ export default function SquareGallerySection() {
       window.removeEventListener("keydown", handleKeyDown);
       document.body.style.overflow = "";
     };
-  }, [selectedIndex, handleKeyDown]);
+  }, [selectedIndex, closeModal, goToPrevious, goToNext]);
 
   // 네비게이션 버튼 표시 여부
   const showNavButtons = images.length > 1;
-
-  // 표시할 이미지 필터링
-  const displayedImages = images.slice(0, displayCount);
-  const hasMore = displayCount < images.length;
-
-  // 더보기 클릭 핸들러
-  const handleLoadMore = () => {
-    setDisplayCount((prev) => prev + calculateItemsPerPage(windowWidth || 1024));
-  };
 
   return (
     <section
@@ -199,9 +156,9 @@ export default function SquareGallerySection() {
       className="square-gallery-section"
       style={{
         width: "100%",
-        padding: "10px 0 80px 0",
+        padding: "0 0 60px 0",
         position: "relative",
-        background: "#000000",
+        background: "transparent",
       }}
     >
       <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 20px" }}>
@@ -228,91 +185,45 @@ export default function SquareGallerySection() {
 
         {/* 정사각형 그리드 */}
         {!isLoading && !error && images.length > 0 && (
-          <>
+          <div
+          className="square-grid"
+          style={{
+            display: "grid",
+            gap: "12px",
+            gridTemplateColumns: "repeat(2, 1fr)", // 기본 2열 (모바일)
+          }}
+        >
+          {images.map((src, index) => (
             <div
-              className="square-grid"
+              key={src}
+              onClick={() => openModal(index)}
               style={{
-                display: "grid",
-                gap: "12px",
-                gridTemplateColumns: "repeat(2, 1fr)", // 기본 2열 (모바일)
+                position: "relative",
+                width: "100%",
+                aspectRatio: "1 / 1",
+                borderRadius: "8px",
+                overflow: "hidden",
+                cursor: "pointer",
+                boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+                transition: "all 0.3s ease",
+                opacity: 0,
+                transform: "translateY(24px) scale(0.88)",
+                animation: isVisible ? `popIn 0.55s cubic-bezier(0.34, 1.45, 0.64, 1) ${index * 0.04}s forwards` : "none",
+                backgroundColor: "#e0e0e0",
               }}
+              className="gallery-item"
             >
-              {displayedImages.map((src, index) => (
-                <div
-                  key={src}
-                  onClick={() => openModal(index)}
-                  style={{
-                    position: "relative",
-                    width: "100%",
-                    aspectRatio: "1 / 1",
-                    borderRadius: "8px",
-                    overflow: "hidden",
-                    cursor: "pointer",
-                    boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-                    transition: "all 0.3s ease",
-                    opacity: 0,
-                    transform: "translateY(24px) scale(0.88)",
-                    animation: isVisible ? `popIn 0.55s cubic-bezier(0.34, 1.45, 0.64, 1) ${index * 0.04}s forwards` : "none",
-                    backgroundColor: "#e0e0e0",
-                  }}
-                  className="gallery-item"
-                >
-                  <Image
-                    src={src}
-                    alt={`포트폴리오 ${index + 1}`}
-                    fill
-                    sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 20vw"
-                    style={{ objectFit: "cover" }}
-                    loading="lazy"
-                  />
-                </div>
-              ))}
+              <Image
+                src={src}
+                alt={`포트폴리오 ${index + 1}`}
+                fill
+                sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 20vw"
+                style={{ objectFit: "cover" }}
+                loading="lazy"
+              />
             </div>
-
-            {/* 더보기 버튼 */}
-            {hasMore && (
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  marginTop: "40px",
-                }}
-              >
-                <button
-                  onClick={(e) => {
-                    handleLoadMore();
-                    // 모바일에서 클릭 후 hover 상태 초기화
-                    e.currentTarget.style.backgroundColor = "transparent";
-                    e.currentTarget.style.color = "#ffffff";
-                    e.currentTarget.blur();
-                  }}
-                  style={{
-                    padding: "12px 40px",
-                    backgroundColor: "transparent",
-                    color: "#fff",
-                    border: "2px solid #ffffff",
-                    borderRadius: "6px",
-                    fontSize: "16px",
-                    fontWeight: "600",
-                    cursor: "pointer",
-                    transition: "all 0.3s ease",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = "#ffffff";
-                    e.currentTarget.style.color = "#000000";
-                    e.currentTarget.style.transform = "translateY(-2px)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = "transparent";
-                    e.currentTarget.style.color = "#ffffff";
-                    e.currentTarget.style.transform = "translateY(0)";
-                  }}
-                >
-                  더보기
-                </button>
-              </div>
-            )}
-          </>
+          ))}
+        </div>
         )}
       </div>
 

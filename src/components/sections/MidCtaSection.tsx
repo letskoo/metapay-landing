@@ -1,10 +1,28 @@
 "use client";
 
 import { useRef, useEffect, useState } from "react";
+import StatsCounter from "./StatsCounter";
 
-export default function MidCtaSection() {
+interface MidCtaContent {
+  headline: string;
+  subtitle: string;
+}
+
+interface MidCtaSectionProps {
+  content?: MidCtaContent;
+}
+
+const DEFAULT_CONTENT: MidCtaContent = {
+  headline: "당신이 생각하는 \"특별한 가치\"\n그것을 전달하는데 집중하겠습니다",
+  subtitle: "전문 인력 상시 배치로 불편사항을 현장에서 즉시 해결합니다",
+};
+
+export default function MidCtaSection({ content }: MidCtaSectionProps) {
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLElement | null>(null);
+
+  // Safe content with fallback to defaults
+  const safeContent = content ?? DEFAULT_CONTENT;
 
   useEffect(() => {
     if (!sectionRef.current) return;
@@ -27,7 +45,7 @@ export default function MidCtaSection() {
   }, [isVisible]);
 
   const handleScrollToPortfolio = () => {
-    const portfolioElement = document.getElementById("promo-tiles");
+    const portfolioElement = document.getElementById("lead-form");
     if (portfolioElement) {
       portfolioElement.scrollIntoView({ behavior: "smooth" });
     }
@@ -35,16 +53,22 @@ export default function MidCtaSection() {
 
   return (
     <section
+      id="mid-cta-section"
       ref={sectionRef}
       className="mid-cta-section"
-      style={{ width: "100%", overflow: "hidden", paddingTop: "28px" }}
+      style={{ 
+        width: "100%", 
+        overflow: "hidden", 
+        paddingTop: "0px",
+        background: "#000000"
+      }}
     >
       <div
         className="mid-cta-container"
         style={{
           maxWidth: 1200,
           margin: "0 auto",
-          padding: "54px 20px",
+          padding: "54px 20px 10px 20px",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
@@ -63,10 +87,10 @@ export default function MidCtaSection() {
           <h2
             className="mid-cta-headline"
             style={{
-              fontSize: "clamp(18px, 3vw, 36px)",
+              fontSize: "clamp(20px, 2.5vw, 28px)",
               fontWeight: 800,
               lineHeight: 1.15,
-              color: "#000",
+              color: "#ffffff",
               margin: 0,
               marginBottom: "14px",
               animationName: "slideDownFadeIn",
@@ -77,82 +101,44 @@ export default function MidCtaSection() {
               animationPlayState: isVisible ? "running" : "paused",
               opacity: 0,
               letterSpacing: "-0.02em",
+              whiteSpace: "pre-line",
             }}
           >
-            제작비용은 낮추고,
-            <br />
-            홈페이지 퀄리티는 높여드렸습니다
+            {safeContent?.headline || ""}
           </h2>
 
           {/* 서브문구 */}
-          <p
-            className="mid-cta-subtitle"
-            style={{
-              fontSize: "clamp(11.5px, 1.5vw, 14px)",
-              fontWeight: 500,
-              lineHeight: 1.46,
-              color: "#666",
-              margin: 0,
-              marginBottom: "50px",
-              animationName: "slideDownFadeIn",
-              animationDuration: "0.8s",
-              animationTimingFunction: "ease-out",
-              animationDelay: "0.9s",
-              animationFillMode: "forwards",
-              animationPlayState: isVisible ? "running" : "paused",
-              opacity: 0,
-            }}
-          >
-            최신 AI 인공지능을 통해 완성된 제작 사례를 공개합니다
-          </p>
-
-          {/* CTA 버튼 */}
-          <div style={{ width: "100%", display: "flex", justifyContent: "center", marginBottom: "20px" }}>
-            <button
-              onClick={handleScrollToPortfolio}
-              className="mid-cta-button mb-8 md:mb-12"
+          {safeContent?.subtitle && (
+            <p
+              className="mid-cta-subtitle"
               style={{
-                padding: "10px 80px",
-                fontSize: "14px",
-                fontWeight: 700,
-                border: "none",
-                borderRadius: "8px",
-                background: "#003DA5",
-                color: "#fff",
-                cursor: "pointer",
-                transition: "all 0.3s ease",
-                animationName: "zoomIn",
-                animationDuration: "0.45s",
-                animationTimingFunction: "cubic-bezier(0.34, 1.56, 0.64, 1)",
-                animationDelay: "1.6s",
+                fontSize: "clamp(13px, 1.5vw, 20px)",
+                fontWeight: 500,
+                lineHeight: 1.46,
+                color: "#ffffff",
+                margin: 0,
+                marginBottom: "50px",
+                animationName: "slideDownFadeIn",
+                animationDuration: "0.8s",
+                animationTimingFunction: "ease-out",
+                animationDelay: "0.9s",
                 animationFillMode: "forwards",
                 animationPlayState: isVisible ? "running" : "paused",
                 opacity: 0,
-                transform: "scale(0.85)",
-                boxShadow: "0 1px 6px rgba(0, 0, 0, 0.12)",
-                whiteSpace: "nowrap",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = "#0b3a92";
-                e.currentTarget.style.boxShadow = "0 2px 8px rgba(0, 0, 0, 0.18)";
-                e.currentTarget.style.transform = "translateY(-2px)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = "#003DA5";
-                e.currentTarget.style.boxShadow = "0 1px 6px rgba(0, 0, 0, 0.12)";
-                e.currentTarget.style.transform = "translateY(0)";
               }}
             >
-              포트폴리오 보러가기
-            </button>
+              {safeContent.subtitle}
+            </p>
+          )}
+
+          {/* CTA 통계 */}
+          <div style={{ width: "100%", display: "flex", justifyContent: "center", marginBottom: "20px" }}>
+            <StatsCounter />
           </div>
         </div>
       </div>
 
-      {/* 애니메이션 스타일 정의 (인라인 스타일로 keyframes 주입) */}
+      {/* 애니메이션 스타일 정의 */}
       <style>{`
         @keyframes slideDownFadeIn {
           0% {
